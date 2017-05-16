@@ -1,3 +1,5 @@
+var basurl = "http://dvd-library.apphb.com";
+
 $(document).ready(function () {
 
     loadDVDs();
@@ -6,29 +8,29 @@ $(document).ready(function () {
 
     $('#gotoCreateButton').click(function () {
 
-      $('#mainPage').hide();
+        $('#mainPage').hide();
 
-      $('#addDVD').show();
+        $('#addDVD').show();
 
     });
 
     $('#addCancel').click(function () {
 
-    resetAll();
+        resetAll();
 
     });
 
 
     $('#editCancel').click(function () {
 
-    resetAll();
+        resetAll();
 
     });
 
 
     $('#displayCancel').click(function () {
 
-    resetAll();
+        resetAll();
 
     });
 
@@ -40,36 +42,36 @@ $(document).ready(function () {
         // check for errors and display any that we have
         // pass the input associated with the add form to the validation function
 
-        if ($('#addDVDTitle').val() == "" ){
+        if ($('#addDVDTitle').val() == "") {
 
-          $('#adderrorMessages')
-             .append($('<li>')
-             .attr({class: 'list-group-item list-group-item-danger'})
-             .text('Please enter a title for the DVD.'));
+            $('#adderrorMessages')
+               .append($('<li>')
+               .attr({ class: 'list-group-item list-group-item-danger' })
+               .text('Please enter a title for the DVD.'));
 
-             var stop = true;
+            var stop = true;
 
         }
 
         var year = $('#addReleaseYear').val();
 
-        if (year.length !=4 || isNaN(year)==true){
+        if (year.length != 4 || isNaN(year) == true) {
 
-          $('#adderrorMessages')
-             .append($('<li>')
-             .attr({class: 'list-group-item list-group-item-danger'})
-             .text('Please enter a 4-digit year.'));
+            $('#adderrorMessages')
+               .append($('<li>')
+               .attr({ class: 'list-group-item list-group-item-danger' })
+               .text('Please enter a 4-digit year.'));
 
-             var stop = true;
+            var stop = true;
         }
 
-        if(stop==true){return false;}
+        if (stop == true) { return false; }
 
         // if we made it here, there are no errors so make the ajax call
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:53319/dvd',
-                data: JSON.stringify({
+            url: basurl + '/dvd',
+            data: JSON.stringify({
                 title: $('#addDVDTitle').val(),
                 releaseYear: $('#addReleaseYear').val(),
                 director: $('#addDirector').val(),
@@ -81,13 +83,13 @@ $(document).ready(function () {
                 'Content-Type': 'application/json'
             },
             'dataType': 'json',
-            success: function(data, status) {
+            success: function (data, status) {
                 $('#addDVD').hide();
                 $('#mainPage').show();
 
-              // clear errorMessages
+                // clear errorMessages
                 $('#errorMessages').empty();
-               // Clear the form and reload the table
+                // Clear the form and reload the table
                 $('#addDVDTitle').val('');
                 $('#addReleaseYear').val('');
                 $('#addDirector').val('');
@@ -96,10 +98,10 @@ $(document).ready(function () {
                 loadDVDs();
                 $('#errorMessages').empty();
             },
-            error: function() {
+            error: function () {
                 $('#errorMessages')
                    .append($('<li>')
-                   .attr({class: 'list-group-item list-group-item-danger'})
+                   .attr({ class: 'list-group-item list-group-item-danger' })
                    .text('Error calling web service.  Please try again later.'));
             }
         });
@@ -118,71 +120,71 @@ $(document).ready(function () {
 
         // check for errors and display any that we have
         // pass the input associated with the edit form to the validation function
-        if ($('#editDVDTitle').val() == "" ){
+        if ($('#editDVDTitle').val() == "") {
 
-          $('#errorMessages')
-             .append($('<li>')
-             .attr({class: 'list-group-item list-group-item-danger'})
-             .text('Please enter a title for the DVD.'));
+            $('#errorMessages')
+               .append($('<li>')
+               .attr({ class: 'list-group-item list-group-item-danger' })
+               .text('Please enter a title for the DVD.'));
 
-             var stop = true;
+            var stop = true;
 
         }
 
         var year = $('#editReleaseYear').val();
 
-        if (year.length !=4 || isNaN(year)==true){
+        if (year.length != 4 || isNaN(year) == true) {
 
-          $('#errorMessages')
-             .append($('<li>')
-             .attr({class: 'list-group-item list-group-item-danger'})
-             .text('Please enter a 4-digit year.'));
+            $('#errorMessages')
+               .append($('<li>')
+               .attr({ class: 'list-group-item list-group-item-danger' })
+               .text('Please enter a 4-digit year.'));
 
-             var stop = true;
+            var stop = true;
         }
 
-        if(stop==true){return false;}
+        if (stop == true) { return false; }
 
         // if we get to here, there were no errors, so make the Ajax call
         $.ajax({
-           async: true,
-           crossDomain: true,
-           type: 'PUT',
-           url: 'http://localhost:53319/dvd/' + $('#editDVDId').val(),
-           dataType: 'json',
-           processData: false,
-           data: JSON.stringify({
-             dvdId: $('#editDVDId').val(),
-             title: $('#editDVDTitle').val(),
-             releaseYear: $('#editReleaseYear').val(),
-             director: $('#editDirector').val(),
-             rating: $('#editRating').val(),
-             notes: $('#editNotes').val(),
-           }),
-           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-           },
-            success: function() {
+            async: true,
+            crossDomain: true,
+            type: 'PUT',
+            url: basurl + '/dvd/' + $('#editDVDId').val(),
+            dataType: 'json',
+            processData: false,
+            data: JSON.stringify({
+                dvdId: $('#editDVDId').val(),
+                title: $('#editDVDTitle').val(),
+                releaseYear: $('#editReleaseYear').val(),
+                director: $('#editDirector').val(),
+                rating: $('#editRating').val(),
+                notes: $('#editNotes').val(),
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function () {
 
                 loadDVDs();
                 $('#errorMessages').empty();
 
-           },
-           error: function() {
-             $('#errorMessages')
-                .append($('<li>')
-                .attr({class: 'list-group-item list-group-item-danger'})
-                .text('Error calling web service.  Please try again later.'));
-           }
-       })
+            },
+            error: function () {
+                $('#errorMessages')
+                   .append($('<li>')
+                   .attr({ class: 'list-group-item list-group-item-danger' })
+                   .text('Error calling web service.  Please try again later.'));
+            }
+        })
     });
 
-    $('#searchButton').click(function(){
+    $('#searchButton').click(function () {
 
-      clearDVDTable();
+        clearDVDTable();
 
-      resetAll();
+        resetAll();
 
         // check for errors and display any that we have
         // pass the input associated with the edit form to the validation function
@@ -196,28 +198,28 @@ $(document).ready(function () {
         var choice = $('#dropDown').val();
         var term = $('#searchTerm').val();
 
-        if(choice == "showAll"){
-        var tempurl='http://localhost:53319/dvds';
+        if (choice == "showAll") {
+            var tempurl = basurl + '/dvds';
         }
-        else if(choice == "searchTitle" && term != null){
-          var tempurl='http://localhost:53319/dvds/title/' + term;
+        else if (choice == "searchTitle" && term != null) {
+            var tempurl = basurl + '/dvds/title/' + term;
         }
-        else if(choice == "searchYear" && term != null && term.length == 4 && isNaN(term) == false){
-          var tempurl='http://localhost:53319/dvds/year/' + term;
+        else if (choice == "searchYear" && term != null && term.length == 4 && isNaN(term) == false) {
+            var tempurl = basurl + '/dvds/year/' + term;
         }
-        else if(choice == "searchDirector" && term != null){
-        var tempurl='http://localhost:53319/dvds/director/' + term;
+        else if (choice == "searchDirector" && term != null) {
+            var tempurl = basurl + '/dvds/director/' + term;
         }
-        else if(choice == "searchRating" && term != null){
-        var tempurl='http://localhost:53319/dvds/rating/' + term;
+        else if (choice == "searchRating" && term != null) {
+            var tempurl = basurl + '/dvds/rating/' + term;
         }
-        else{
-        //  error: function() {
+        else {
+            //  error: function() {
             $('#errorMessages').append($('<li>Both Search Category and Search Term are required</li>'))
-        //       .attr({class: 'list-group-item list-group-item-danger'})
-        //       .text('Both Search Category and Search Term are required');
-        //}
-      }
+            //       .attr({class: 'list-group-item list-group-item-danger'})
+            //       .text('Both Search Category and Search Term are required');
+            //}
+        }
         searchDVDs(tempurl);
     });
 })
@@ -233,9 +235,9 @@ function loadDVDs() {
     // grab the the tbody element that will hold the rows of contact information
     var contentRows = $('#contentRows');
 
-    $.ajax ({
+    $.ajax({
         type: 'GET',
-        url: 'http://localhost:53319/dvds',
+        url: basurl + '/dvds',
         success: function (data, status) {
             $.each(data, function (index, dvd) {
                 var title = dvd.title;
@@ -245,23 +247,23 @@ function loadDVDs() {
                 var id = dvd.dvdId;
 
                 var row = '<tr>';
-                    row += '<td align="center" width="25%"><a onclick="displayDVD(' + id + ')">' + title + '</a></td>';
-                    row += '<td align="center" width="25%">' + releaseYear + '</td>';
-                    row += '<td align="center" width="15%">' + director + '</td>';
-                    row += '<td align="center" width="10%">' + rating + '</td>';
-                    row += '<td align="center" width="5%"><a onclick="showEditForm(' + id + ')">Edit</a></td>';
-                    row += '<td align="center" width="5%"><a onclick="deleteDVD(' + id + ')">Delete</a></td>';
-                    row += '<td width="15%"></td>';
-                    row += '</tr>';
+                row += '<td align="center" width="25%"><a onclick="displayDVD(' + id + ')">' + title + '</a></td>';
+                row += '<td align="center" width="25%">' + releaseYear + '</td>';
+                row += '<td align="center" width="15%">' + director + '</td>';
+                row += '<td align="center" width="10%">' + rating + '</td>';
+                row += '<td align="center" width="5%"><a onclick="showEditForm(' + id + ')">Edit</a></td>';
+                row += '<td align="center" width="5%"><a onclick="deleteDVD(' + id + ')">Delete</a></td>';
+                row += '<td width="15%"></td>';
+                row += '</tr>';
                 contentRows.append(row);
 
                 $('#errorMessages').empty();
             });
         },
-        error: function() {
+        error: function () {
             $('#errorMessages')
                 .append($('<li>')
-                .attr({class: 'list-group-item list-group-item-danger'})
+                .attr({ class: 'list-group-item list-group-item-danger' })
                 .text('Error calling web service.  Please try again later.'));
         }
 
@@ -282,19 +284,18 @@ function checkAndDisplayValidationErrors(input) {
     var errorMessages = [];
 
     // loop through each input and check for validation errors
-    input.each(function() {
+    input.each(function () {
         // Use the HTML5 validation API to find the validation errors
-        if(!this.validity.valid)
-        {
-            var errorField = $('label[for='+this.id+']').text();
+        if (!this.validity.valid) {
+            var errorField = $('label[for=' + this.id + ']').text();
             errorMessages.push(errorField + ' ' + this.validationMessage);
         }
     });
 
     // put any error messages in the errorMessages div
-    if (errorMessages.length > 0){
-        $.each(errorMessages,function(index,message){
-            $('#errorMessages').append($('<li>').attr({class: 'list-group-item list-group-item-danger'}).text(message));
+    if (errorMessages.length > 0) {
+        $.each(errorMessages, function (index, message) {
+            $('#errorMessages').append($('<li>').attr({ class: 'list-group-item list-group-item-danger' }).text(message));
         });
         // return true, indicating that there were errors
         return true;
@@ -318,23 +319,23 @@ function showEditForm(dvdId) {
     // form on success
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:53319/dvd/' + dvdId,
-        success: function(data, status) {
-              $('#editDVDTitle').val(data.title);
-              $('#editReleaseYear').val(data.releaseYear);
-              $('#editDirector').val(data.director);
-              $('#editRating').val(data.rating);
-              $('#editNotes').val(data.notes);
-              $('#editDVDId').val(data.dvdId);
+        url: basurl + '/dvd/' + dvdId,
+        success: function (data, status) {
+            $('#editDVDTitle').val(data.title);
+            $('#editReleaseYear').val(data.releaseYear);
+            $('#editDirector').val(data.director);
+            $('#editRating').val(data.rating);
+            $('#editNotes').val(data.notes);
+            $('#editDVDId').val(data.dvdId);
 
-              $('#errorMessages').empty();
-          },
-          error: function() {
+            $('#errorMessages').empty();
+        },
+        error: function () {
             $('#errorMessages')
                .append($('<li>')
-               .attr({class: 'list-group-item list-group-item-danger'})
+               .attr({ class: 'list-group-item list-group-item-danger' })
                .text('Error calling web service.  Please try again later.'));
-          }
+        }
     });
 
     $('#editDVD').show();
@@ -342,36 +343,36 @@ function showEditForm(dvdId) {
 
 function deleteDVD(dvdId) {
 
-  var txt;
+    var txt;
 
-  var r = confirm("Are you sure you want to delete this DVD from your collection?");
-  if (r == true) {
+    var r = confirm("Are you sure you want to delete this DVD from your collection?");
+    if (r == true) {
 
-    $.ajax ({
-        type: 'DELETE',
-        url: "http://localhost:53319/dvd/" + dvdId,
-        success: function (status) {
-            loadDVDs();
-        }
-    });
+        $.ajax({
+            type: 'DELETE',
+            url: basurl + "/dvd/" + dvdId,
+            success: function (status) {
+                loadDVDs();
+            }
+        });
 
-  } else {
+    } else {
         loadDVDs();
-  }
+    }
 
 }
 
-function displayDVD(dvdId){
+function displayDVD(dvdId) {
 
-  $('#errorMessages').empty();
+    $('#errorMessages').empty();
 
-  $('#mainPage').hide();
-  $('#displayDetail').show();
+    $('#mainPage').hide();
+    $('#displayDetail').show();
 
-  $.ajax({
-      type: 'GET',
-      url: 'http://localhost:53319/dvd/' + dvdId,
-      success: function(data, status) {
+    $.ajax({
+        type: 'GET',
+        url: basurl + '/dvd/' + dvdId,
+        success: function (data, status) {
             $('#displayTitle').text(data.title);
             $('#displayYear').text(data.releaseYear);
             $('#displayDirector').text(data.director);
@@ -380,13 +381,13 @@ function displayDVD(dvdId){
 
             $('#errorMessages').empty();
         },
-        error: function() {
-          $('#errorMessages')
-             .append($('<li>')
-             .attr({class: 'list-group-item list-group-item-danger'})
-             .text('Error calling web service.  Please try again later.'));
+        error: function () {
+            $('#errorMessages')
+               .append($('<li>')
+               .attr({ class: 'list-group-item list-group-item-danger' })
+               .text('Error calling web service.  Please try again later.'));
         }
-  });
+    });
 }
 
 function searchDVDs(tempURL) {
@@ -400,7 +401,7 @@ function searchDVDs(tempURL) {
     // grab the the tbody element that will hold the rows of contact information
     var contentRows = $('#contentRows');
 
-    $.ajax ({
+    $.ajax({
         type: 'GET',
         url: tempURL,
         success: function (data, status) {
@@ -412,36 +413,36 @@ function searchDVDs(tempURL) {
                 var id = dvd.dvdId;
 
                 var row = '<tr>';
-                    row += '<td align="center" width="25%"><a onclick="displayDVD(' + id + ')">' + title + '</a></td>';
-                    row += '<td align="center" width="25%">' + releaseYear + '</td>';
-                    row += '<td align="center" width="15%">' + director + '</td>';
-                    row += '<td align="center" width="10%">' + rating + '</td>';
-                    row += '<td align="center" width="5%"><a onclick="showEditForm(' + id + ')">Edit</a></td>';
-                    row += '<td align="center" width="5%"><a onclick="deleteDVD(' + id + ')">Delete</a></td>';
-                    row += '<td width="15%"></td>';
-                    row += '</tr>';
+                row += '<td align="center" width="25%"><a onclick="displayDVD(' + id + ')">' + title + '</a></td>';
+                row += '<td align="center" width="25%">' + releaseYear + '</td>';
+                row += '<td align="center" width="15%">' + director + '</td>';
+                row += '<td align="center" width="10%">' + rating + '</td>';
+                row += '<td align="center" width="5%"><a onclick="showEditForm(' + id + ')">Edit</a></td>';
+                row += '<td align="center" width="5%"><a onclick="deleteDVD(' + id + ')">Delete</a></td>';
+                row += '<td width="15%"></td>';
+                row += '</tr>';
                 contentRows.append(row);
 
                 $('#errorMessages').empty();
             });
         },
-        error: function() {
+        error: function () {
             $('#errorMessages')
                 .append($('<li>')
-                .attr({class: 'list-group-item list-group-item-danger'})
+                .attr({ class: 'list-group-item list-group-item-danger' })
                 .text('Both Search Category and Search Term are required.'));
         }
 
     });
 }
 
-function resetAll(){
+function resetAll() {
 
-  $('#mainPage').show();
-  $('#addDVD').hide();
-  $('#editDVD').hide();
-  $('#displayDetail').hide();
-  $('#errorMessages').empty();
+    $('#mainPage').show();
+    $('#addDVD').hide();
+    $('#editDVD').hide();
+    $('#displayDetail').hide();
+    $('#errorMessages').empty();
 
 }
 
@@ -453,19 +454,18 @@ function checkAndDisplayValidationErrors(input) {
     var errorMessages = [];
 
     // loop through each input and check for validation errors
-    input.each(function() {
+    input.each(function () {
         // Use the HTML5 validation API to find the validation errors
-        if(!this.validity.valid)
-        {
-            var errorField = $('label[for='+this.id+']').text();
+        if (!this.validity.valid) {
+            var errorField = $('label[for=' + this.id + ']').text();
             errorMessages.push(errorField + ' ' + this.validationMessage);
         }
     });
 
     // put any error messages in the errorMessages div
-    if (errorMessages.length > 0){
-        $.each(errorMessages,function(index,message){
-            $('#errorMessages').append($('<li>').attr({class: 'list-group-item list-group-item-danger'}).text(message));
+    if (errorMessages.length > 0) {
+        $.each(errorMessages, function (index, message) {
+            $('#errorMessages').append($('<li>').attr({ class: 'list-group-item list-group-item-danger' }).text(message));
         });
         // return true, indicating that there were errors
         return true;
